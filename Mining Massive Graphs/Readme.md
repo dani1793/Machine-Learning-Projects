@@ -38,7 +38,7 @@ Once the constants are set the file could be run from the terminal. The file wit
 # EXACT COMPUTATION:
 
 Once the edges for the subgraph LSCC and LWCC are extracted the exact computation or approximate computation could be used to find the statistics.
-To compute the exact statistics the file exact_statistics.py is used. The file find the exact statistics for one connected component at a time. To find the statistics for LWCC and LSCC the program should be run 2 times using the appropriate settings. The file has some constants which needs to be set.
+To compute the exact statistics the file exact_statistics.py is used. The file find the exact statistics for one connected component at a time. To find the statistics for LWCC and LSCC the program should run 2 times using the appropriate settings. The file has some constants which needs to be set.
 
 * STATS_FILE_NAME:	File path to save the running time of the program.
 * DELIMITER:		Used to define the delimiter used in the graphs provided.
@@ -47,7 +47,7 @@ To compute the exact statistics the file exact_statistics.py is used. The file f
 * PATH_DISTRIBUTION_PATH:	File Path where you want to store the path distribution.
 * CONNECTED_COMPONENT:	Which path distribution do you want to extract the values of this constant could be 'lscc' or 'lwcc'.
 
-## NOTE: The directories should be created in advanced otherwise the program would throw an error of directory not found.##
+**NOTE: The directories should be created in advanced otherwise the program would throw an error of directory not found.**
 
 The directory_structure.png file is available to see the default directory structure used
 
