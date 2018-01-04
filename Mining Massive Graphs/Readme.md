@@ -21,7 +21,7 @@ The following libraries are required to run the approximate computation part:
 
 The packages could be easily installed using pip and pip3.
 
-# COMPONENT EXTRACTION: 
+# Component Extraction: 
 
 To find the statistics for the provided graph, the subgraphs of LSCC and LWCC are extracted. The subgraphs are than used for exact and approximate computation of statistics.
 For the extraction of subgraphs component_extraction.py file is used. The constants are set. The paths are relative to the directory in which component_extraction.py file is located
@@ -35,7 +35,7 @@ For the extraction of subgraphs component_extraction.py file is used. The consta
 
 Once the constants are set the file could be run from the terminal. The file with the LSCC and LWCC would be created in the directory defined in EDGE_WRITE constant
 
-# EXACT COMPUTATION:
+# Exact Computation:
 
 Once the edges for the subgraph LSCC and LWCC are extracted the exact computation or approximate computation could be used to find the statistics.
 To compute the exact statistics the file exact_statistics.py is used. The file find the exact statistics for one connected component at a time. To find the statistics for LWCC and LSCC the program should run 2 times using the appropriate settings. The file has some constants which needs to be set.
@@ -51,7 +51,7 @@ To compute the exact statistics the file exact_statistics.py is used. The file f
 
 The directory_structure.png file is available to see the default directory structure used
 
-# APPROXIMATION COMPUTATION:
+# Approximate Computation:
 
 The code is distributed into four jupyter notebooks, each representing each graph for which we have done approximations and exact computations:
 
