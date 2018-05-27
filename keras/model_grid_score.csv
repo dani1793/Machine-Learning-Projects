@@ -1,0 +1,9 @@
+,parameters,mean_validation_score,cv_validation_scores
+0,"{'dense_layer_sizes': [32], 'epochs': 3, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.10682368168278902,[-0.11477313 -0.10179648 -0.10390143]
+1,"{'dense_layer_sizes': [32], 'epochs': 6, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.08504053244214627,[-0.08504168 -0.0804819  -0.08959801]
+2,"{'dense_layer_sizes': [64], 'epochs': 3, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.08848208665416919,[-0.08811059 -0.08747341 -0.08986226]
+3,"{'dense_layer_sizes': [64], 'epochs': 6, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.06975333768154693,[-0.06495039 -0.07748544 -0.06682419]
+4,"{'dense_layer_sizes': [32, 32], 'epochs': 3, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.09651492039207829,[-0.09807902 -0.10100387 -0.09046187]
+5,"{'dense_layer_sizes': [32, 32], 'epochs': 6, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.08811101858464751,[-0.10386424 -0.07935431 -0.08111451]
+6,"{'dense_layer_sizes': [64, 64], 'epochs': 3, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.07491572654524328,[-0.08399006 -0.06931668 -0.07144044]
+7,"{'dense_layer_sizes': [64, 64], 'epochs': 6, 'filters': 8, 'kernel_size': 3, 'pool_size': 2}",-0.058948651200687464,[-0.05777432 -0.05907825 -0.05999338]
