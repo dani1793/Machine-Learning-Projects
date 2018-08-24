@@ -29,3 +29,7 @@ Intrinsic evaluation of word vectors is the evaluation of a set of word vectors 
 
 **NOTE: The intrinsic testing scripit could be found in intrinsic-testing.ipynb**
 
+## Tokenizer
+There is intemediate process of tokenization involved in the pipeline. The tokenizer converts the selected words of selected passage into indexed tokens These tokenized sentences are then fed into neural network for sentimental analysis
+
+**NOTE: The intrinsic testing scripit could be found in tokenizer.ipynb**
