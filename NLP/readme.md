@@ -33,3 +33,13 @@ Intrinsic evaluation of word vectors is the evaluation of a set of word vectors 
 There is intemediate process of tokenization involved in the pipeline. The tokenizer converts the selected words of selected passage into indexed tokens These tokenized sentences are then fed into neural network for sentimental analysis
 
 **NOTE: The intrinsic testing scripit could be found in tokenizer.ipynb**
+
+## Neural Network
+The nerual network model creation and loading of preprocessed data is performed in **sentiment-analysis-model.ipynb**. The tokenized training data is loaded and the padding pre padding is performed to data for average number of words in each sentence. Once we have the padded data and their corresponding labels we define the hyperparameters that we need to optimize.
+
+The hyperparameters optimized in this tutorials are 
+- Number of RNN layers
+- Number of recurrent units in each layer
+- Number of epochs the model should train.
+
+The hyperparameters are optimized using Gaussian Process.
