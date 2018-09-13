@@ -1,0 +1,109 @@
+## Reading Data
+
+```{r}
+list.files()
+pf <- read.csv('pseudo_facebook.tsv', sep = '\t')
+names(pf)
+```
+
+## Histograms of Users' Birthday
+The histogram show that the 1st and 15th day have unusual count of birthdays. This is unusual trend as we are expecting all the days to have equal number of birthdays at average. The low number of birthdays at 31st is ligit, as most of the months do not have 31st day.
+```{r}
+# install.packages('ggplot2')
+library(ggplot2)
+qplot(x = dob_day, data = pf) +
+  scale_x_continuous(breaks = 1:31)
+```
+Creating facets of data would divide the plot in further subplots and makes it easier to plot the data. Here we divide the date of births into 12 months of 3 columns.
+```{r}
+qplot(x = dob_day, data = pf) +
+  scale_x_continuous(breaks = 1:31) + 
+  facet_wrap(~dob_month, ncol = 3)
+```
+## Friends Count
+This data is an example of long tail data. datapoints with large quantity are stacked towards one side of graph and as we go to opposite side of graph, the quantity decreases. To better analyse the data we could use *xlim* parameter of qplot. 
+```{r}
+qplot(data = pf, x = friend_count, xlim = c(0,1000))
+qplot(data = pf, x = friend_count, binwidth = 25) +
+  scale_x_continuous(limits= c(0,1000), breaks = seq(0,1000,50)) +
+  facet_wrap(~gender, ncol = 2)
+```
+
+Remove the NA varaible for gender. Creating a subset of the original data which omits the rows of data that have no data for gender property
+```{r}
+qplot(data = subset(pf, !is.na(gender)), x = friend_count, binwidth = 25) +
+  scale_x_continuous(limits= c(0,1000), breaks = seq(0,1000,50)) +
+  facet_wrap(~gender, ncol = 2)
+```
+## Statistics 'by' gender
+```{r}
+by(pf$friend_count, pf$gender, summary)
+```
+
+## Tenure
+```{r}
+qplot(data = pf, x = tenure/365, 
+      xlab = 'Days users were have joined facebook',
+      ylab = 'Number of users',
+      binwidth = 0.25, color=I('black'), fill=I('#099DD9')) +
+  scale_x_continuous(breaks = seq(0,7,1))
+```
+
+## Transforming Data
+```{r}
+summary(log10(pf$friend_count + 1))
+summary(sqrt(pf$friend_count))
+# Used to install multiple histograms on one plot install.packages('gridExtra')
+library(gridExtra)
+p1 = qplot(data = pf, x = friend_count)
+
+p2 = qplot(data = pf, x = friend_count) +
+  scale_x_log10()
+
+p3 = qplot(data = pf, x = friend_count) +
+  scale_x_sqrt()
+
+grid.arrange(p1, p2, p3, ncol=2)
+```
+
+### ggplot implementation
+```{r}
+summary(log10(pf$friend_count + 1))
+summary(sqrt(pf$friend_count))
+# Used to install multiple histograms on one plot install.packages('gridExtra')
+library(gridExtra)
+p1 <-  ggplot(data = pf, aes(x = friend_count)) + geom_histogram()
+
+p2 <- p1 + scale_x_log10()
+
+p3 <- p1 + scale_x_sqrt()
+
+grid.arrange(p1, p2, p3, ncol=2)
+```
+
+## Frequency Plot
+```{r}
+summary(pf$www_likes)
+p1 = qplot(data=subset(pf, !is.na(gender)), 
+      x=www_likes, y = ..count../sum(..count..), 
+      xlab = 'Friend Count',
+      ylab = 'Friend count proportion',
+      geom = 'freqpoly', color=gender) + 
+  scale_x_log10()
+p2 = qplot(data=subset(pf, !is.na(gender)), 
+      x=www_likes, y = ..count../sum(..count..), 
+      xlab = 'Friend Count',
+      ylab = 'Friend count proportion',
+      geom = 'freqpoly', color=gender) + 
+  scale_x_log10(lim = c(1,30), breaks= seq(1,30,2))
+
+grid.arrange(p1,p2)
+```
+## Box plot
+We use coord_cartesian instead of the continuous scaling layer beacuse that would not match the median and quartiles with the summary. We can use both the by command and the box plot to see the distribution for different categorial values. Box plot give us nice representation and makes it easy to compare the distribution. Box plot also helps us understand how the distribution is distributed
+```{r}
+qplot(x=gender, y=friend_count, data = subset(pf, !is.na(gender)), geom='boxplot') +
+  coord_cartesian(ylim = c(0,1000))
+
+by(pf$friend_count, pf$gender, summary)
+```

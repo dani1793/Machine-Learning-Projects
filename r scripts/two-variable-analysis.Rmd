@@ -1,0 +1,143 @@
+## Reading Data
+
+```{r}
+list.files()
+pf <- read.csv('pseudo_facebook.tsv', sep = '\t')
+names(pf)
+```
+
+## Scatter Plot
+In the following plot we can observe that there is large cluster of data for teenagers showing that they have high friend count. Furthermore, it could be observed that some people have lied about their age which is represented by the vertical bars.
+
+The second command is of **ggplot** which is more generic command to make plots than qplots. It is more customizable and allows us to make hybrid plots as well.
+```{r}
+library(ggplot2)
+qplot(x=age, y= friend_count, data = pf)
+ggplot(aes(x=age, y = friend_count), data = pf) + 
+  geom_point() + xlim(13,90)
+```
+The **alpha** parameter allows us to set the opacity of points. It helps in showing where the clusters of points are located and helps us fine tune the data. **geom_jitter** allows us to add some noise to the data so that clusters points could be scattered and we can see more clear relationship betwene the two variables.
+
+In the second plot we transform the y-axis with square root transformation.
+```{r}
+ggplot(aes(x=age, y = friend_count + 1), data = pf) + 
+  geom_jitter(alpha = 1/20) + xlim(13,90) + coord_trans(y = "sqrt")
+ggplot(aes(x=age, y = friend_count), data = pf) + 
+  geom_point(alpha = 1/20, position = position_jitter(h=0)) + xlim(13,90) + coord_trans(y = "sqrt")
+```
+
+## Friendship_initiated vs age
+```{r}
+names(pf)
+summary(pf$age)
+ggplot(aes(x=age, y = friendships_initiated), data = pf) +
+  geom_point(alpha = 1/20, position = position_jitter(h=0)) + xlim(13, 70) + coord_trans(y = 'sqrt')
+```
+
+## Conditional Mean
+The new package is use to extract statistics from dataframe and re-arrage the data. The following code performs the following in order
+* Group all the data by age
+* summarize the grouped data for mean, median and number of rows for each
+* arrage the dataset w.r.t age variable
+```{r}
+library(dplyr)
+age_groups <- group_by(pf,age)
+pf.fc_by_age <- summarise(age_groups, 
+                         friend_count_mean = mean(friend_count),
+                         friend_count_median = median(friend_count),
+                         n = n())
+pf.fc_by_age <- arrange(pf.fc_by_age,age)
+head(pf.fc_by_age)
+
+library(ggplot2)
+ggplot(aes(x= age, y= friend_count_mean), data = pf.fc_by_age) +
+  geom_line()
+```
+
+## Overlapping
+
+```{r}
+ggplot(aes(x=age, y = friend_count), data = pf) + 
+  geom_point(alpha = 1/20, position = position_jitter(h=0), color = 'orange') + 
+  xlim(13,90) + 
+  coord_trans(y = "sqrt") +
+  geom_line(stat='summary', fun.y = mean) +
+  geom_line(stat='summary', fun.y = quantile, fun.args=list(probs=0.1), linetype= 2, color = 'blue') +
+  geom_line(stat='summary', fun.y = quantile, fun.args=list(probs=0.9), linetype= 2, color = 'blue') + 
+  geom_line(stat='summary', fun.y = quantile,fun.args=list(probs=0.5), color = 'blue') 
+
+ggplot(aes(x=age, y = friend_count), data = pf) + 
+  geom_point(alpha = 1/20, position = position_jitter(h=0), color = 'orange') + 
+  coord_cartesian(xlim=c(13,70), ylim= c(0,1000)) + 
+  geom_line(stat='summary', fun.y = mean) +
+  geom_line(stat='summary', fun.y = quantile, fun.args=list(probs=0.1), linetype= 2, color = 'blue') +
+  geom_line(stat='summary', fun.y = quantile, fun.args=list(probs=0.9), linetype= 2, color = 'blue') + 
+  geom_line(stat='summary', fun.y = quantile,fun.args=list(probs=0.5), color = 'blue') 
+  
+```
+
+## Correlation 
+A good rule of thumb for correlation is that a correlation greater than 0.3 or less than -0.3 is meaningful but small, around 0.5 is moderate and 0.7 is pretty large
+```{r}
+cor.test(pf$age,pf$friend_count)
+with(pf, cor.test(age,friend_count))
+```
+
+## www_likes_received vs likes_received
+
+```{r}
+ggplot(aes(x=www_likes_received, y = likes_received),data = pf) +
+  geom_point() +
+  xlim(0, quantile(pf$www_likes_received,0.95)) +
+  ylim(0, quantile(pf$likes_received,0.95)) +
+  geom_smooth(method='lm',color='red')
+
+with(pf, cor.test(www_likes_received,likes_received))
+```
+
+## More caution with Correlation Solution
+```{r}
+library(alr3)
+data(Mitchell)
+
+ggplot(data=Mitchell, aes(x= Month, y= Temp)) +
+  geom_point() +
+  scale_x_discrete(limits= c(0,203), breaks = seq(0,203,11))
+summary(Mitchell$Month)
+with(Mitchell, cor.test(Month,Temp))
+```
+
+### Age With Months
+```{r}
+pf$age_with_months <- pf$age + (12 - pf$dob_month)/12
+
+age_with_months <- group_by(pf,age_with_months)
+pf.fc_by_age_months <- summarise(age_with_months, 
+                         friend_count_mean = mean(friend_count),
+                         friend_count_median = median(friend_count),
+                         n = n())
+pf.fc_by_age_months <- arrange(pf.fc_by_age_months,age_with_months)
+
+ggplot(aes(x= age_with_months, y= friend_count_mean), data = subset(pf.fc_by_age_months, age_with_months < 71))  +
+  geom_line() 
+```
+
+## Smooth noisy graphs
+As we change the bin size of age we can see more noise on the data and more discontinuity. The compromise between the bias and variance depends on the application and the choice of scenerio. We can use algorithms to choose the bin size and perform smoothing but sometimes they do not take into account local patterns between variables. Due to this reason we should look into graphs by ourselves as well.
+
+In the graphs below the local relationship between the two variables (friend count of teenagers) is not taken into account while performing smoothing. Moreover, peak at age 69 is also smoothed due to surround low values.
+
+Before performing smoothing it is better to understand the data and local relationships. One solution to apply smoothing is to divide the graph or data into two and treat them as two different graphs. In this case divide the graph into group ages and than perform smoothing. This would allow for better smoothing and would retain the local relationship of variables.
+```{r}
+p1= ggplot(aes(x= age, y= friend_count_mean), data =subset(pf.fc_by_age, age < 71) ) +
+  geom_line() +
+  geom_smooth()
+
+p2 = ggplot(aes(x= age_with_months, y= friend_count_mean), data = subset(pf.fc_by_age_months, age_with_months < 71))  +
+  geom_line() +
+  geom_smooth()
+
+library(gridExtra)
+grid.arrange(p1, p2, ncol=1)
+
+```

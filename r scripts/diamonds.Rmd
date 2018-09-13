@@ -1,0 +1,67 @@
+#Diamond data set EDA
+
+## Load Dataset
+```{r}
+library(ggplot2) #must load the ggplot package first
+data(diamonds) #loads the diamonds data set since it comes with the ggplot package
+summary(diamonds)
+```
+
+
+```{r}
+qplot(data= diamonds, x = price)
+summary(diamonds$price)
+lessThan500 <- subset(diamonds, price < 500)
+nrow(lessThan500)
+
+moreThan1500 <- subset(diamonds, price >= 15000)
+nrow(moreThan1500)
+summary(diamonds$price)
+qplot(data= diamonds, x = price, color=I('black'), fill=I('#099DD9'), binwidth = 10) +
+  scale_x_continuous(limits=c(326,900))
+```
+Scales in *facet_wrap* command is used to allow different scale for plots that are created. This is good thing to consider as it allow us to compare different distributions shapes.
+```{r}
+names(diamonds)
+summary(diamonds$price)
+qplot(data= diamonds, x = price, color=I('black'), fill=I('#099DD9')) +
+  scale_x_continuous() +
+  facet_wrap(~cut, ncol = 2, scales = "free_y")
+
+summary(subset(diamonds, cut == 'Fair', select = c(price)))
+summary(subset(diamonds, cut == 'Good', select = c(price)))
+summary(subset(diamonds, cut == 'Very Good', select = c(price)))
+summary(subset(diamonds, cut == 'Premium', select = c(price)))
+summary(subset(diamonds, cut == 'Ideal', select = c(price)))
+```
+```{r}
+names(diamonds)
+diamonds$pricePerCarat <- diamonds$price/diamonds$carat
+qplot(data= diamonds, x = pricePerCarat, color=I('black'), fill=I('#099DD9')) +
+  scale_x_log10() +
+  facet_wrap(~cut, ncol = 2, scales = "free_y")
+```
+## BoxPlot
+```{r}
+qplot(x=cut, y=price, data = diamonds, geom='boxplot') + 
+  coord_cartesian(ylim = c(0,6500))
+
+summary(subset(diamonds, color == 'D')$price)
+summary(subset(diamonds, color == 'J')$price)
+IQR(subset(diamonds, color == 'D')$price)
+IQR(subset(diamonds, color == 'J')$price)
+
+qplot(x=color, y=pricePerCarat, data = diamonds, geom='boxplot') + 
+  coord_cartesian(ylim = c(2000,6500))
+```
+
+## Frequency Plot
+```{r}
+qplot(data=diamonds, 
+      x=carat, 
+      binwidth = 0.01,
+      xlab = 'Carat',
+      ylab = 'Count',
+      geom = 'freqpoly') +
+  scale_x_continuous(limits = c(0,1.05), breaks = seq(0,1.05,0.05))
+```
