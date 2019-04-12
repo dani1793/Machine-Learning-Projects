@@ -12,7 +12,7 @@ The code in q-learning runs on the user simulation so it does not take any input
 - Once the agents are trained use simulation.py to get to know the characteristics of each user.
 - Final Q values obtained could be used to extract reports using rl-visualization.R
 
-Report for the project could be found (here)[https://dani1793.github.io/machine-learning-portfolio/email-marketing/].
+Report for the project could be found [here](https://dani1793.github.io/machine-learning-portfolio/email-marketing/)
 
 
 
