@@ -1,0 +1,69 @@
+---
+title: "statistics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+suppressMessages(library(dplyr))
+library(tidytext)
+library(stringr)
+library(ggplot2)
+library(dplyr)
+library(hrbrthemes)
+```
+
+## Loading data
+
+Load data 
+
+```{r cars}
+cumCSV = read.csv(file="./logs/finalCSV.csv", sep=",")
+head(cumCSV)
+
+# Cumulative DF with no errors
+noErrors <- cumCSV %>% 
+    filter(!str_detect(error, "(True)|(true)"))
+```
+
+## Comuted statistics 
+```{r days classification}
+noErrors$weekends = str_detect(noErrors$day, regex('(SAT)|(SUN)'))
+# Extract resolved IP counts
+noErrors$resolvedIPsCount = str_count(noErrors$resolvedIPs,',') + 1
+# Average Downloading Rates
+noErrors$downloadingRateAverage = lapply(lapply(str_extract_all(noErrors$downloadingRates, regex('([0-9]+.[0-9]+)')), as.numeric), mean)
+```
+
+## Extract different type of videos
+
+```{r url regex formation}
+veryPopularRegex = "(v=_Ia4VSwc3Jk)|(v=dTs6-ZMAbhA)|(v=mDyJVMlTXqY)"
+popularRegex = "(v=Y_RIByAIrgg)|(v=8FZd3NUJVAM)|(v=du6ImAKv40Y)"
+mediumRegex = "(v=tDX0P83wuAo)|(v=5Evu50rOwSE)|(v=oCddUgQP5js)"
+lowRegex = "(v=seJzhsYwDgE)|(v=xmaskTiBU2k)|(v=IfZ6rILUF-U)"
+
+veryPopular <- noErrors %>% 
+  filter(str_detect(url, regex(veryPopularRegex, ignore_case = TRUE)))
+popular <- noErrors %>% 
+  filter(str_detect(url, regex(popularRegex, ignore_case = TRUE)))
+medium <- noErrors %>% 
+  filter(str_detect(url, regex(mediumRegex, ignore_case = TRUE)))
+low <- noErrors %>% 
+  filter(str_detect(url, regex(lowRegex, ignore_case = TRUE)))
+```
+
+```{r average download rates}
+# Represent it
+p <- noErrors %>%
+  ggplot(aes(x=resolvedIPsCount, fill=weekends)) +
+  geom_histogram( color="#e9ecef", alpha=0.4, position = 'identity') +
+  # scale_fill_manual(values=c(rgb(1,0,0,0.5), rgb(0,1,0,0.5), rgb(0,0,1,0.5))) + 
+  scale_y_sqrt() + 
+ labs(title="distribution of resolved ips in relation to weekends", x="resolved Ip Counts", y="Count")
+p
+save.image()
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
