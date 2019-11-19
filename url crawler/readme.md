@@ -30,6 +30,7 @@ A sample command looks is as follows
 `conda install -c conda-forge python-crontab`
 
 There are some additional parameters used by cron script the parameters are as follows
+
 | Flags       | Description |
 | ------------- |:-------------:| 
 | --repeat | The option tell if we want to repeat the script or not(takes 'true' or 'false')      | 
